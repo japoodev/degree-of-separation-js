@@ -10,55 +10,24 @@ function OutputPath(props) {
 
     const [result, setResult] = React.useState([]);
 
-    function findPath(node1, node2) {
-        const queue = [];
-        queue.push(node1);
-
-        const discovered = [];
-        discovered[node1] = true;
-
-        const edges = [];
-        edges[node1] = 0;
-
-        const predecessors = [];
-        predecessors[node1] = null;
-
-        const buildPath = (node2, node1, predecessors) => {
-            const stack = [];
-            stack.push(node2);
-
-            let u = predecessors[node2];
-
-            while (u !== node1) {
-                stack.push(u);
-                u = predecessors[u];
-            }
-
-            stack.push(node1);
-
-            return stack.reverse();
-        }
-
+    function printAllPaths(node1, node2) {
+        let paths = [];
+        let visited = new Set();
+        let queue = [];
+        queue.push([node1, [node1]]);
         while (queue.length > 0) {
-            let v = queue.shift();
-
-            if (v === node2) {
-                setResult(buildPath(node2, node1, predecessors));
-                return;
+            let [currentNode, path] = queue.shift();
+            visited.add(currentNode);
+            if (currentNode === node2) {
+                paths.push(path);
             }
-
-            for (let i = 0; i < props.adjacencyList.get(v).length; i++) {
-                if(!discovered[props.adjacencyList.get(v)[i][0]]){
-                    queue.push(props.adjacencyList.get(v)[i][0]);
-                    discovered[props.adjacencyList.get(v)[i][0]] = true;
-                    edges[props.adjacencyList.get(v)[i][0]] = edges[v] + 1;
-                    predecessors[props.adjacencyList.get(v)[i][0]] = v;
+            for (let [neighbor] of props.adjacencyList.get(currentNode)) {
+                if (!visited.has(neighbor)) {
+                    queue.push([neighbor, [...path, neighbor]]);
                 }
             }
         }
-
-        setResult([]);
-
+        setResult(paths);
     }
 
 
@@ -68,7 +37,7 @@ function OutputPath(props) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        findPath(findDegree.node1, findDegree.node2);
+        printAllPaths(findDegree.node1, findDegree.node2);
         setFindDegree({
             node1: "",
             node2: ""
@@ -86,7 +55,15 @@ function OutputPath(props) {
             
             <input className="rounded-md bg-indigo-800 text-white text-sm h-8 w-14 m-2" type="submit" value="Submit" onClick={handleSubmit} />
         </form>
-        {result.length > 0 && <p className="ml-2">The degree of separation is: <b>{result.join(" > ")}</b></p>}
+        {result.length > 0 &&<div className="ml-2">
+            <h3>Result</h3>
+            <ul className="font-semibold">
+                {result.map((path, index) => {
+                    return <li key={index}>{index+1}. {path.join(" -> ")}</li>
+                })}
+            </ul>
+            <button className="rounded-md bg-amber-600 text-white text-sm h-8 w-20 m-2" onClick={() => setResult([])}>Clear result</button>
+        </div>}
         {props.adjacencyList.size > 0 && <div>
             <h3 className="ml-2 underline font-semibold">Adjacency List</h3>
             {Array.from(props.adjacencyList.keys()).map((key, index) => {
@@ -94,7 +71,6 @@ function OutputPath(props) {
             })}
         </div>
         }
-
     </div>
   )
 }

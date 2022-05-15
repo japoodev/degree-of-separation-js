@@ -1,25 +1,11 @@
 import React from 'react'
+import InputName from './InputName';
+import InputEdge from './InputEdge';
+import OutputPath from './OutputPath';
 
 function Main() {
 
     const [adjacencyList, setAdjacencyList] = React.useState(new Map());
-    const [node, setNode] = React.useState("");
-    const [edge, setEdge] = React.useState(
-        {
-            node1: "",
-            node2: "",
-            weight: ""
-        }
-    );
-    const [findDegree, setFindDegree] = React.useState(
-        {
-            node1: "",
-            node2: ""
-        }
-    );
-    
-    const [result, setResult] = React.useState([]);
-
 
     const addNode = (node) => {
         setAdjacencyList(new Map([...adjacencyList, [node, []]]));
@@ -42,123 +28,18 @@ function Main() {
       }
     }  
 
-    const findDegreeSeparation = (node1, node2) => {
-        if(adjacencyList.has(node1) && adjacencyList.has(node2)){
-            let path = [];
-            let visited = new Set();
-            let queue = [node1];
-            while(queue.length > 0){
-                let currentNode = queue.shift();
-                path.push(currentNode)
-                visited.add(currentNode);
-                if(currentNode === node2){
-                    break;
-                }
-                else{
-                    let neighbors = adjacencyList.get(currentNode);
-                    for(let i = 0; i < neighbors.length; i++){
-                        if(!visited.has(neighbors[i][0])){
-                            queue.push(neighbors[i][0]);
-                        }
-                    }
-                }
-            }   
-            return path;
-        }
-        else{
-            alert("One or more nodes do not exist");
-        }
+    const clear = () => {
+        setAdjacencyList(new Map());
     }
 
-        
-
-    const handleNodeChange = (event) => {
-        setNode(event.target.value);
-    }
-
-    const handleNodeSubmit = (event) => {
-        event.preventDefault();
-        addNode(node);
-        setNode("");
-    }
-
-    const handleEdgeChange = (event) => {
-        setEdge({...edge, [event.target.name]: event.target.value});
-    }
-
-    const handleEdgeSubmit = (event) => {
-        event.preventDefault();
-        addEdgeWeight(edge.node1, edge.node2, edge.weight);
-        setEdge({
-            node1: "",
-            node2: "",
-            weight: ""
-        });
-    }
-
-    const handleFindDegreeChange = (event) => {
-        setFindDegree({...findDegree, [event.target.name]: event.target.value});
-    }
-
-    const handleFindDegreeSubmit = (event) => {
-        event.preventDefault();
-        const newResult = findDegreeSeparation(findDegree.node1, findDegree.node2);
-        setResult([...newResult]);
-        setFindDegree({
-            node1: "",
-            node2: ""
-        });
-    }
 
     
   return (
-    <div>
-        <h1>Main</h1>
-        <form>
-            <label>
-                Node:
-                <input type="text" value={node} onChange={handleNodeChange} />
-            </label>
-            <input type="submit" value="Submit" onClick={handleNodeSubmit} />
-        </form>
-        <form>
-            <label>
-                Node 1:
-                <input type="text" value={edge.node1} onChange={handleEdgeChange} name="node1" />
-            </label>
-            <label>
-                Node 2:
-                <input type="text" value={edge.node2} onChange={handleEdgeChange} name="node2" />
-            </label>
-            <label>
-                Weight:
-                <input type="text" value={edge.weight} onChange={handleEdgeChange} name="weight" />
-            </label>
-            <input type="submit" value="Submit" onClick={handleEdgeSubmit} />
-        </form>
-        <form>
-            <label>
-                Node 1:
-                <input type="text" value={findDegree.node1} onChange={handleFindDegreeChange} name="node1" />
-            </label>
-            <label>
-                Node 2:
-                <input type="text" value={findDegree.node2} onChange={handleFindDegreeChange} name="node2" />
-            </label>
-            <input type="submit" value="Submit" onClick={handleFindDegreeSubmit} />
-        </form>
-        <div>
-            <h2>Adjacency List</h2>
-            <ul>
-                {Array.from(adjacencyList.keys()).map((node, index) => {
-                    return <li key={index}>{node} -> {adjacencyList.get(node).map((edge, index) => {
-                        return <span key={index}>{edge[0]} ({edge[1]})</span>
-                    })}</li>
-                })}
-            </ul>
-        </div>
-        <h2>Path</h2>
-        <p>{result.join(" > ")}</p>
+    <div className="flex flex-col mt-12 border-2 mx-4 p-4 shadow-md rounded-lg">
+        <InputName addName={addNode} />
+        <InputEdge addEdgeWeight={addEdgeWeight} />
+        <OutputPath adjacencyList={adjacencyList} />
+        <button onClick={clear} className="rounded-md bg-red-800 text-white text-sm h-8 w-16 m-2">Clear list</button>
     </div>
   )
 }

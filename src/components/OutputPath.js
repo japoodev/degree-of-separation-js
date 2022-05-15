@@ -10,21 +10,20 @@ function OutputPath(props) {
 
     const [result, setResult] = React.useState([]);
 
-    //Find the shortest path between any two nodes. Return the path as an array of nodes.
-    const findPath = (node1, node2) => {
+    const findShortestPath = (node1, node2) => {
         if(props.adjacencyList.has(node1) && props.adjacencyList.has(node2)){
-            const path = [];
-            const visited = new Set();
-            const queue = [node1];
+            let path = [];
+            let visited = new Set();
+            let queue = [node1];
             while(queue.length > 0){
-                const current = queue.shift();
-                visited.add(current);
-                if(current === node2){
-                    path.push(current);
+                let currentNode = queue.shift();
+                path.push(currentNode)
+                visited.add(currentNode);
+                if(currentNode === node2){
                     break;
                 }
                 else{
-                    const neighbors = props.adjacencyList.get(current);
+                    let neighbors = props.adjacencyList.get(currentNode);
                     for(let i = 0; i < neighbors.length; i++){
                         if(!visited.has(neighbors[i][0])){
                             queue.push(neighbors[i][0]);
@@ -32,15 +31,10 @@ function OutputPath(props) {
                     }
                 }
             }
-            if(path.length > 0){
-                setResult(path);
-            }
-            else{
-                setResult(["No path found"]);
-            }
+            setResult(path);
         }
         else{
-            setResult(["One or more nodes do not exist"]);
+            alert("One or more nodes do not exist");
         }
     }
 
@@ -50,7 +44,7 @@ function OutputPath(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        findPath(findDegree.node1, findDegree.node2);
+        findShortestPath(findDegree.node1, findDegree.node2);
         setFindDegree({
             node1: "",
             node2: ""

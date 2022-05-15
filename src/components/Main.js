@@ -18,6 +18,9 @@ function Main() {
         }
     );
     
+    const [result, setResult] = React.useState([]);
+
+
     const addNode = (node) => {
         setAdjacencyList(new Map([...adjacencyList, [node, []]]));
     }
@@ -99,8 +102,8 @@ function Main() {
 
     const handleFindDegreeSubmit = (event) => {
         event.preventDefault();
-        const result = findDegreeSeparation(findDegree.node1, findDegree.node2);
-        console.log(`Path: ${result.join(" -> ")}`);
+        const newResult = findDegreeSeparation(findDegree.node1, findDegree.node2);
+        setResult([...newResult]);
         setFindDegree({
             node1: "",
             node2: ""
@@ -144,8 +147,18 @@ function Main() {
             </label>
             <input type="submit" value="Submit" onClick={handleFindDegreeSubmit} />
         </form>
+        <div>
+            <h2>Adjacency List</h2>
+            <ul>
+                {Array.from(adjacencyList.keys()).map((node, index) => {
+                    return <li key={index}>{node} -> {adjacencyList.get(node).map((edge, index) => {
+                        return <span key={index}>{edge[0]} ({edge[1]})</span>
+                    })}</li>
+                })}
+            </ul>
+        </div>
         <h2>Path</h2>
-        <p>{adjacencyList} </p>
+        <p>{result.join(" > ")}</p>
     </div>
   )
 }

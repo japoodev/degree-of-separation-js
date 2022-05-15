@@ -11,15 +11,19 @@ function Main() {
             weight: ""
         }
     );
+    const [findDegree, setFindDegree] = React.useState(
+        {
+            node1: "",
+            node2: ""
+        }
+    );
 
     const addNode = (node) => {
         setAdjacencyList(new Map([...adjacencyList, [node, []]]));
     }
 
     const addEdgeWeight = (node1, node2, weight) => {
-      //Check if node1 and node2 exist
       if(adjacencyList.has(node1) && adjacencyList.has(node2)){
-        //Check if edge already exists
         if(adjacencyList.get(node1).includes(node2)){
           alert("Edge already exists");
         }
@@ -33,6 +37,37 @@ function Main() {
       else{
         alert("One or more nodes do not exist");
       }
+    }  
+
+    //Write a function to find the degree of separation as a path between two nodes
+    //It should store the nodes in the path in an array
+    //It should return the array
+    const findDegreeSeparation = (node1, node2) => {
+        if(adjacencyList.has(node1) && adjacencyList.has(node2)){
+            let path = [];
+            let visited = new Set();
+            let queue = [[node1, 0]];
+            while(queue.length > 0){
+                let currentNode = queue.shift();
+                path.push(currentNode)
+                visited.add(currentNode[0]);
+                if(currentNode[0] === node2){
+                    break;
+                }
+                else{
+                    let neighbors = adjacencyList.get(currentNode[0]);
+                    for(let i = 0; i < neighbors.length; i++){
+                        if(!visited.has(neighbors[i][0])){
+                            queue.push([neighbors[i][0], currentNode[1] + 1]);
+                        }
+                    }
+                }
+            }
+            return path;
+        }
+        else{
+            alert("One or more nodes do not exist");
+        }
     }
 
         
@@ -58,6 +93,20 @@ function Main() {
             node1: "",
             node2: "",
             weight: ""
+        });
+    }
+
+    const handleFindDegreeChange = (event) => {
+        setFindDegree({...findDegree, [event.target.name]: event.target.value});
+    }
+
+    const handleFindDegreeSubmit = (event) => {
+        event.preventDefault();
+        const result = findDegreeSeparation(findDegree.node1, findDegree.node2);
+        console.log(`Path: ${result.join(" -> ")}`);
+        setFindDegree({
+            node1: "",
+            node2: ""
         });
     }
 
@@ -87,6 +136,18 @@ function Main() {
             </label>
             <input type="submit" value="Submit" onClick={handleEdgeSubmit} />
         </form>
+        <form>
+            <label>
+                Node 1:
+                <input type="text" value={findDegree.node1} onChange={handleFindDegreeChange} name="node1" />
+            </label>
+            <label>
+                Node 2:
+                <input type="text" value={findDegree.node2} onChange={handleFindDegreeChange} name="node2" />
+            </label>
+            <input type="submit" value="Submit" onClick={handleFindDegreeSubmit} />
+        </form>
+        <h2>Path</h2>
         <p>{adjacencyList} </p>
     </div>
   )

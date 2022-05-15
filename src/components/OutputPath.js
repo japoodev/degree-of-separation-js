@@ -10,41 +10,65 @@ function OutputPath(props) {
 
     const [result, setResult] = React.useState([]);
 
-    const findShortestPath = (node1, node2) => {
-        if(props.adjacencyList.has(node1) && props.adjacencyList.has(node2)){
-            let path = [];
-            let visited = new Set();
-            let queue = [node1];
-            while(queue.length > 0){
-                let currentNode = queue.shift();
-                path.push(currentNode)
-                visited.add(currentNode);
-                if(currentNode === node2){
-                    break;
-                }
-                else{
-                    let neighbors = props.adjacencyList.get(currentNode);
-                    for(let i = 0; i < neighbors.length; i++){
-                        if(!visited.has(neighbors[i][0])){
-                            queue.push(neighbors[i][0]);
-                        }
-                    }
+    function findPath(node1, node2) {
+        const queue = [];
+        queue.push(node1);
+
+        const discovered = [];
+        discovered[node1] = true;
+
+        const edges = [];
+        edges[node1] = 0;
+
+        const predecessors = [];
+        predecessors[node1] = null;
+
+        const buildPath = (node2, node1, predecessors) => {
+            const stack = [];
+            stack.push(node2);
+
+            let u = predecessors[node2];
+
+            while (u !== node1) {
+                stack.push(u);
+                u = predecessors[u];
+            }
+
+            stack.push(node1);
+
+            return stack.reverse();
+        }
+
+        while (queue.length > 0) {
+            let v = queue.shift();
+
+            if (v === node2) {
+                setResult(buildPath(node2, node1, predecessors));
+                return;
+            }
+
+            for (let i = 0; i < props.adjacencyList.get(v).length; i++) {
+                if(!discovered[props.adjacencyList.get(v)[i][0]]){
+                    queue.push(props.adjacencyList.get(v)[i][0]);
+                    discovered[props.adjacencyList.get(v)[i][0]] = true;
+                    edges[props.adjacencyList.get(v)[i][0]] = edges[v] + 1;
+                    predecessors[props.adjacencyList.get(v)[i][0]] = v;
                 }
             }
-            setResult(path);
         }
-        else{
-            alert("One or more nodes do not exist");
-        }
+
+        setResult([]);
+
     }
 
-    const handleChange = (event) => {
-        setFindDegree({...findDegree, [event.target.name]: event.target.value});
+
+    function handleChange(event) {
+        setFindDegree({ ...findDegree, [event.target.name]: event.target.value });
     }
 
-    const handleSubmit = (event) => {
+    function handleSubmit(event) {
         event.preventDefault();
-        findShortestPath(findDegree.node1, findDegree.node2);
+        findPath(findDegree.node1, findDegree.node2);
         setFindDegree({
             node1: "",
             node2: ""

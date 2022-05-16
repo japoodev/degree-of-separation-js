@@ -66,9 +66,16 @@ function OutputPath(props) {
         </div>}
         {props.adjacencyList.size > 0 && <div>
             <h3 className="ml-2 underline font-semibold">Adjacency List</h3>
-            {Array.from(props.adjacencyList.keys()).map((key, index) => {
-                return <p key={index} className="ml-2">{key}</p>
-            })}
+            {props.adjacencyList.size > 0 && <div>
+                {Array.from(props.adjacencyList.keys()).map((key, index) => {
+                    return <p key={index} className="ml-2">
+                        {key} -&gt; {props.adjacencyList.get(key).map(([neighbor]) => {
+                            return neighbor
+                        }).join(", ")}
+                    </p>
+                })}
+            </div>
+            }
         </div>
         }
     </div>

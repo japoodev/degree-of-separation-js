@@ -13,14 +13,14 @@ function Main() {
 
     const addEdgeWeight = (node1, node2, weight) => {
       if(adjacencyList.has(node1) && adjacencyList.has(node2)){
-        if(adjacencyList.get(node1).includes(node2)){
-          alert("Edge already exists");
-        }
-        else{
+        if(adjacencyList.get(node1).indexOf(node2) === -1){
           const newAdjacencyList = new Map(adjacencyList);
           newAdjacencyList.set(node1, [...newAdjacencyList.get(node1), [node2, weight]]);
           newAdjacencyList.set(node2, [...newAdjacencyList.get(node2), [node1, weight]]);
           setAdjacencyList(newAdjacencyList);
+        }
+        else{
+          alert("Edge already exists");
         }
       }
       else{

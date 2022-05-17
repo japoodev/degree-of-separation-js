@@ -21,8 +21,7 @@ const Main = () => {
       node1 = node1.trim();
       node2 = node2.trim();
       if(adjacencyList.has(node1) && adjacencyList.has(node2)){
-        console.log(...adjacencyList.get(node1));
-        if(adjacencyList.get(node1).indexOf(node2) === -1){
+        if(!adjacencyList.get(node1).map(x => x == `${node2},${weight}` ? 'yes' : 'no').includes('yes')){
           const newAdjacencyList = new Map(adjacencyList);
           newAdjacencyList.set(node1, [...newAdjacencyList.get(node1), [node2, weight]]);
           newAdjacencyList.set(node2, [...newAdjacencyList.get(node2), [node1, weight]]);

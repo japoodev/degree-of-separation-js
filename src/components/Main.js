@@ -9,6 +9,7 @@ function Main() {
 
     const addNode = (node) => {
       node = node.trim();
+      if(node === '') return;
       if(adjacencyList.has(node)){
         alert("Node already exists");
         return;

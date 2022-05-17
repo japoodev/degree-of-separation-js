@@ -3,7 +3,7 @@ import InputName from './InputName';
 import InputEdge from './InputEdge';
 import OutputPath from './OutputPath';
 
-function Main() {
+const Main = () => {
 
     const [adjacencyList, setAdjacencyList] = React.useState(new Map());
 

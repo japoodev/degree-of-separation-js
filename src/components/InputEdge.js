@@ -1,6 +1,6 @@
 import React from 'react'
 
-function InputEdge(props) {
+const InputEdge = (props) => {
     const [edge, setEdge] = React.useState(
         {
             name1: "",

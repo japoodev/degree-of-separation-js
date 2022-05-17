@@ -1,6 +1,6 @@
 import React from 'react'
 
-function InputName(props) {
+const InputName = (props) => {
     const [name, setName] = React.useState('');
 
     const handleChange = (event) => {

@@ -1,6 +1,6 @@
 import React from 'react'
 
-function OutputPath(props) {
+const OutputPath = (props) => {
     const [findDegree, setFindDegree] = React.useState(
         {
             node1: "",
@@ -10,7 +10,7 @@ function OutputPath(props) {
 
     const [result, setResult] = React.useState([]);
 
-    function printAllPaths(node1, node2) {
+    const printAllPaths = (node1, node2) => {
         node1 = node1.trim();
         node2 = node2.trim();
         let paths = [];
@@ -33,11 +33,11 @@ function OutputPath(props) {
     }
 
 
-    function handleChange(event) {
+    const handleChange = (event) => {
         setFindDegree({ ...findDegree, [event.target.name]: event.target.value });
     }
 
-    function handleSubmit(event) {
+    const handleSubmit = (event) => {
         event.preventDefault();
         printAllPaths(findDegree.node1, findDegree.node2);
         setFindDegree({

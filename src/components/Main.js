@@ -8,11 +8,19 @@ function Main() {
     const [adjacencyList, setAdjacencyList] = React.useState(new Map());
 
     const addNode = (node) => {
-        setAdjacencyList(new Map([...adjacencyList, [node, []]]));
+      node = node.trim();
+      if(adjacencyList.has(node)){
+        alert("Node already exists");
+        return;
+      }
+      setAdjacencyList(new Map([...adjacencyList, [node, []]]));
     }
 
     const addEdgeWeight = (node1, node2, weight) => {
+      node1 = node1.trim();
+      node2 = node2.trim();
       if(adjacencyList.has(node1) && adjacencyList.has(node2)){
+        console.log(...adjacencyList.get(node1));
         if(adjacencyList.get(node1).indexOf(node2) === -1){
           const newAdjacencyList = new Map(adjacencyList);
           newAdjacencyList.set(node1, [...newAdjacencyList.get(node1), [node2, weight]]);

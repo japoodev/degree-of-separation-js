@@ -11,6 +11,8 @@ function OutputPath(props) {
     const [result, setResult] = React.useState([]);
 
     function printAllPaths(node1, node2) {
+        node1 = node1.trim();
+        node2 = node2.trim();
         let paths = [];
         let visited = new Set();
         let queue = [];

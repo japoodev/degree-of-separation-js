@@ -47,7 +47,7 @@ const Main = () => {
         <InputName addName={addNode} />
         <InputEdge addEdgeWeight={addEdgeWeight} />
         <OutputPath adjacencyList={adjacencyList} />
-        <button onClick={clear} className="rounded-md bg-red-800 text-white text-sm h-8 w-20 m-2">Clear list</button>
+        {adjacencyList.size > 0 && <button onClick={clear} className="rounded-md bg-red-800 text-white text-sm h-8 w-20 m-2">Clear list</button>}
     </div>
   )
 }

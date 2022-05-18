@@ -24,7 +24,7 @@ const OutputPath = (props) => {
                 paths.push(path);
             }
             for (let [neighbor] of props.adjacencyList.get(currentNode)) {
-                if (!visited.has(neighbor)) {
+                if (!path.includes(neighbor)) {
                     queue.push([neighbor, [...path, neighbor]]);
                 }
             }
